@@ -65,11 +65,20 @@ const PHOTO_CROPS = [
   { from: 'akcakoca_ic_findik_3.png', to: 'kernels-close-up.png', box: { left: 0, top: 0, width: 495, height: 511 } },
   // Right frame: the vacuum packs (same shot as akcakoca_ic_findik_2, measured slightly sharper).
   { from: 'akcakoca_ic_findik_3.png', to: 'kernels-vacuum-packs.png', box: { left: 505, top: 0, width: 491, height: 511 } },
+
+  // Stock photos (Unsplash License) for journey steps without our own photo yet.
+  // Originals were downloaded at 2400 px wide into AkcanutAssets/stock; see CREDITS.md.
+  // Cropped to the 5:4 step frame and capped at 1300 px wide, the most the page ever uses.
+  { from: 'stock/unsplash-andrey-soldatov-cracked-hazelnut-shells.jpg', to: 'stock-cracked-hazelnut-shells.jpg', box: { left: 199, top: 0, width: 2002, height: 1602 }, maxWidth: 1300 },
+  { from: 'stock/unsplash-hans-reniers-lab-beakers.jpg', to: 'stock-lab-beakers.jpg', box: { left: 200, top: 0, width: 2000, height: 1600 }, maxWidth: 1300 },
+  { from: 'stock/unsplash-youssef-mohamed-bosphorus-bridge.jpg', to: 'stock-istanbul-bosphorus.jpg', box: { left: 350, top: 0, width: 1690, height: 1352 }, maxWidth: 1300 },
+  { from: 'stock/unsplash-sweder-breet-nairobi-skyline.jpg', to: 'stock-nairobi-skyline.jpg', box: { left: 600, top: 180, width: 1300, height: 1040 }, maxWidth: 1300 },
 ];
 
-async function cropPhoto({ from, to, box }) {
+async function cropPhoto({ from, to, box, maxWidth }) {
   const output = path.join(PHOTOS, to);
-  const pipeline = sharp(src(from)).extract(box).removeAlpha();
+  let pipeline = sharp(src(from)).extract(box).removeAlpha();
+  if (maxWidth && box.width > maxWidth) pipeline = pipeline.resize({ width: maxWidth, kernel: 'lanczos3' });
   if (to.endsWith('.png')) {
     await png(pipeline).toFile(output);
   } else {
