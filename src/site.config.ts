@@ -6,7 +6,7 @@ export const siteConfig = {
    * Show the dashed TODO tags that mark missing content (photos, stockists).
    * Keep true during development; set to false for the public launch.
    */
-  showTodos: true,
+  showTodos: false,
 
   /**
    * Languages that are live. The switcher, hreflang tags and sitemap only list these.

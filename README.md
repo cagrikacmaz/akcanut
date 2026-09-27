@@ -138,7 +138,7 @@ deployment → Source: GitHub Actions**.
 - [ ] A higher-resolution photo of loose kernels: the current kernel photos are
       about 490 px wide, so they are never shown larger than that
 - [ ] Turkish and Swahili versions; native review of the Swahili file
-- [ ] Set `showTodos` to `false` before launch
+- [x] Set `showTodos` to `false` for launch (set back to `true` to see the TODO tags)
 
 ## Credits
 
