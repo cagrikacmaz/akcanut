@@ -1,0 +1,112 @@
+---
+import { getImage } from 'astro:assets';
+import logo from '../assets/brand/akcanut-logo.png';
+import kernels from '../assets/photos/kernels-close-up.png';
+import { defaultLocale, getDictionary, localePath, publicPath, publishedLocales, type Locale } from '../i18n';
+import { siteConfig } from '../site.config';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  noindex?: boolean;
+}
+
+const { locale, title, description, noindex = false } = Astro.props;
+const t = getDictionary(locale);
+const site = Astro.site ?? new URL('https://cagrikacmaz.github.io');
+const abs = (path: string) => new URL(path, site).href;
+
+const pageUrl = abs(localePath(locale));
+const homeUrl = abs(localePath(defaultLocale));
+const ogImage = abs(publicPath('og/akcanut-og.jpg'));
+const alternates =
+  publishedLocales.length > 1 ? publishedLocales.map((l) => ({ hreflang: l, href: abs(localePath(l)) })) : [];
+
+const logoPng = await getImage({ src: logo, format: 'png', width: 512 });
+const productImage = await getImage({ src: kernels, format: 'jpg', width: 495 });
+const { contacts } = siteConfig;
+
+// No price or offer data: prices are shared with buyers directly.
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${homeUrl}#organization`,
+      name: 'AKCANUT',
+      url: homeUrl,
+      logo: abs(logoPng.src),
+      description: t.schema.organizationDescription,
+      email: contacts.email,
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Akçakoca',
+        addressRegion: 'Düzce',
+        addressCountry: 'TR',
+      },
+      areaServed: [
+        { '@type': 'Country', name: 'Kenya' },
+        { '@type': 'Place', name: 'East Africa' },
+      ],
+      contactPoint: [
+        { '@type': 'ContactPoint', contactType: 'sales', name: contacts.turkiye.name, telephone: contacts.turkiye.phone, email: contacts.email },
+        { '@type': 'ContactPoint', contactType: 'sales', name: contacts.nairobi.name, telephone: contacts.nairobi.phone },
+      ],
+    },
+    {
+      '@type': 'Product',
+      '@id': `${homeUrl}#product`,
+      name: t.schema.productName,
+      description: t.schema.productDescription,
+      brand: { '@type': 'Brand', name: 'AKCANUT' },
+      manufacturer: { '@id': `${homeUrl}#organization` },
+      image: [abs(productImage.src), ogImage],
+      category: 'Hazelnut kernels',
+      countryOfOrigin: { '@type': 'Country', name: 'Türkiye' },
+      additionalProperty: [
+        { '@type': 'PropertyValue', name: 'Calibre', value: '11 to 13 mm (13 to 15 mm on request)' },
+        { '@type': 'PropertyValue', name: 'Moisture', value: 'Max. 6%' },
+        { '@type': 'PropertyValue', name: 'Shelf life', value: '12 months unopened' },
+        { '@type': 'PropertyValue', name: 'Harvest', value: '2026' },
+        { '@type': 'PropertyValue', name: 'HS code', value: '0802.22' },
+      ],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${homeUrl}#website`,
+      url: pageUrl,
+      name: 'AKCANUT',
+      inLanguage: locale,
+      publisher: { '@id': `${homeUrl}#organization` },
+    },
+  ],
+};
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+{noindex && <meta name="robots" content="noindex" />}
+{!noindex && <link rel="canonical" href={pageUrl} />}
+{!noindex && alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+{!noindex && alternates.length > 0 && <link rel="alternate" hreflang="x-default" href={homeUrl} />}
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="AKCANUT" />
+<meta property="og:title" content={t.meta.ogTitle} />
+<meta property="og:description" content={t.meta.ogDescription} />
+<meta property="og:url" content={pageUrl} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:type" content="image/jpeg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={t.meta.ogImageAlt} />
+<meta property="og:locale" content={t.meta.ogLocale} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={t.meta.ogTitle} />
+<meta name="twitter:description" content={t.meta.ogDescription} />
+<meta name="twitter:image" content={ogImage} />
+<meta name="twitter:image:alt" content={t.meta.ogImageAlt} />
+
+{!noindex && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}

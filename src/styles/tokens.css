@@ -1,0 +1,57 @@
+/*
+ * Design tokens. Brand colours from the AKCANUT brand guide; supporting tones
+ * are taken from the same guide. Contrast ratios are WCAG values on their
+ * intended background.
+ */
+:root {
+  /* Brand colours */
+  --brown: #753a13; /* Hazelnut Brown, 7.9:1 on paper */
+  --green: #355527; /* Orchard Green, 7.6:1 on paper */
+  --navy: #013250; /* Black Sea Navy, 11.9:1 on paper */
+  --paper: #f6f2e8; /* Paper Neutral */
+  --deep: #063321; /* deep green for dark sections, as in the guide */
+
+  /* Supporting tones */
+  --paper-light: #fbfaf6;
+  --paper-deep: #eee9df;
+  --gold: #d2b17a; /* labels on deep green only, 6.9:1 */
+  --deep-card: #12422f;
+  --ink: #34332f; /* body text on paper, 11.3:1 */
+  --ink-muted: #6e6b63; /* secondary text on paper, 4.8:1 */
+  --ink-soft: #605d56; /* secondary text on the darker paper of the footer, 5.4:1 */
+  --line: #ddd7ca;
+  --line-soft: #e7e2d8;
+  --on-deep-text: #dae1dc; /* body text on deep green, 10.5:1 */
+  --on-deep-muted: #b9c2bb; /* secondary text on deep green, 7.7:1 */
+
+  /* Maps */
+  --map-land: #ebe4d4;
+  --map-coast: #cdc4b3;
+  --map-grid: #e7e0d1;
+
+  /* Type scale */
+  --text-small: 0.875rem;
+  --text-base: 1.0625rem;
+  --text-lead: clamp(1.125rem, 1.04rem + 0.36vw, 1.3125rem);
+  --text-h1: clamp(2.875rem, 1.6rem + 5.6vw, 6.25rem);
+  --text-h2: clamp(2.125rem, 1.45rem + 2.9vw, 3.75rem);
+  --text-h3: clamp(1.375rem, 1.22rem + 0.55vw, 1.75rem);
+
+  /* Space and shape */
+  --gutter: clamp(1.25rem, 0.6rem + 3.2vw, 3.5rem);
+  --max: 76rem;
+  --section-pad: clamp(4.5rem, 2.8rem + 6vw, 8.5rem);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --header-h: 3.75rem;
+
+  /* Motion */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (min-width: 60rem) {
+  :root {
+    --header-h: 4.25rem;
+  }
+}

@@ -1,0 +1,44 @@
+---
+import { Font } from 'astro:assets';
+import Seo from '../components/Seo.astro';
+import { getDictionary, publicPath, type Locale } from '../i18n';
+import '../styles/global.css';
+
+interface Props {
+  locale: Locale;
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+}
+
+const { locale, title, description, noindex = false } = Astro.props;
+const t = getDictionary(locale);
+---
+
+<!doctype html>
+<html lang={locale} class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      document.documentElement.classList.replace('no-js', 'js');
+    </script>
+    <Seo
+      locale={locale}
+      title={title ?? t.meta.title}
+      description={description ?? t.meta.description}
+      noindex={noindex}
+    />
+    <Font cssVariable="--font-display" preload={[{ subset: 'latin', weight: '700' }]} />
+    <Font cssVariable="--font-body" preload={[{ subset: 'latin', weight: '400' }]} />
+    <link rel="icon" href={publicPath('favicon.ico')} sizes="32x32" />
+    <link rel="icon" href={publicPath('icon-192.png')} type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href={publicPath('apple-touch-icon.png')} />
+    <link rel="manifest" href={publicPath('site.webmanifest')} />
+    <meta name="theme-color" content="#f6f2e8" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{t.a11y.skipLink}</a>
+    <slot />
+  </body>
+</html>
