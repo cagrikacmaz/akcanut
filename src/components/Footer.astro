@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import icon from '../assets/brand/akcanut-icon.png';
+import { photoCredits } from '../data/photo-credits';
 import { fill, getDictionary, type Locale } from '../i18n';
 import LanguageSwitcher from './LanguageSwitcher.astro';
 
@@ -11,6 +12,14 @@ interface Props {
 const { locale } = Astro.props;
 const t = getDictionary(locale);
 const year = new Date().getFullYear();
+
+// "A, B, C and D" in the page language, with each name linking to its photo.
+const names = photoCredits.map((c) => c.photographer);
+// British English lists have no comma before "and".
+const listLocale = locale === 'en' ? 'en-GB' : locale;
+const nameParts = new Intl.ListFormat(listLocale, { type: 'conjunction' }).formatToParts(names);
+const [creditsBefore, creditsAfter] = t.footer.photoCredits.split('{names}');
+const urlFor = (name: string) => photoCredits.find((c) => c.photographer === name)?.url;
 ---
 
 <footer class="site-footer">
@@ -27,6 +36,19 @@ const year = new Date().getFullYear();
       <p>{fill(t.footer.copyright, { year })}</p>
       <a href="#top">{t.footer.backToTop}</a>
     </div>
+    <p class="site-footer__credits">
+      {creditsBefore}
+      {
+        nameParts.map((part) =>
+          part.type === 'element' ? (
+            <a href={urlFor(part.value)} target="_blank" rel="noopener noreferrer">{part.value}</a>
+          ) : (
+            part.value
+          ),
+        )
+      }
+      {creditsAfter}
+    </p>
   </div>
 </footer>
 
@@ -77,6 +99,18 @@ const year = new Date().getFullYear();
 
   .site-footer__meta a {
     color: var(--ink);
+  }
+
+  .site-footer__credits {
+    grid-column: 1 / -1;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.8125rem;
+    color: var(--ink-soft);
+  }
+
+  .site-footer__credits a {
+    color: var(--ink-soft);
   }
 
   @media (min-width: 48rem) {

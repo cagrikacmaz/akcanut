@@ -84,6 +84,13 @@ original changes:
 Photos are only cropped and compressed, never retouched. The logos are used as
 supplied, trimmed of empty margins.
 
+Journey steps 3, 4, 6 and 7 use stock photos from Unsplash (free commercial use, no
+permission needed). Source, photographer and licence for each are in `CREDITS.md`,
+the photographers are credited in the footer, and the downloaded originals sit in
+`AkcanutAssets/stock/`. To swap one for an own photo, add the original to
+`AkcanutAssets/`, point its entry in `scripts/prepare-assets.mjs` at it, run
+`npm run assets`, and update `src/data/photo-credits.ts` and `CREDITS.md`.
+
 Fonts: Noto Serif Display Bold is self-hosted from `src/assets/fonts` as its Latin
 file plus a small subset with the Turkish letters Ğ ğ İ Ş ş (licence in `OFL.txt`).
 Lato is downloaded from Google Fonts at build time and served from this site.
@@ -115,8 +122,10 @@ deployment → Source: GitHub Actions**.
 
 ## Open items
 
-- [ ] Photo of cracking and hand sorting (journey step 3)
-- [ ] Photo of lab testing or a certificate of analysis (journey step 4)
+- [ ] Journey step 3 (cracking and hand sorting): replace with our own photo.
+      The current one is an Unsplash stock photo.
+- [ ] Journey step 4 (lab testing): replace with our own photo. The current one is an
+      Unsplash stock photo.
 - [ ] Stockists in Nairobi, once confirmed ("Where to find it")
 - [ ] A higher-resolution photo of loose kernels: the current kernel photos are
       about 490 px wide, so they are never shown larger than that
@@ -129,3 +138,4 @@ deployment → Source: GitHub Actions**.
 - Map tiles: © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors
 - Map library: [Leaflet](https://leafletjs.com) (BSD 2-Clause)
 - Fonts: Noto Serif Display and Lato (SIL Open Font License 1.1)
+- Stock photos for journey steps 3, 4, 6 and 7: see `CREDITS.md`

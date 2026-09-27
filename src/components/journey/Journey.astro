@@ -4,8 +4,11 @@ import icon from '../../assets/brand/akcanut-icon.png';
 import packs from '../../assets/photos/kernels-vacuum-packs.png';
 import drying from '../../assets/photos/sun-drying-sacks.jpg';
 import harvest from '../../assets/photos/harvest-family.jpg';
+import cracking from '../../assets/photos/stock-cracked-hazelnut-shells.jpg';
+import istanbul from '../../assets/photos/stock-istanbul-bosphorus.jpg';
+import lab from '../../assets/photos/stock-lab-beakers.jpg';
+import nairobi from '../../assets/photos/stock-nairobi-skyline.jpg';
 import { getDictionary, type Locale } from '../../i18n';
-import Todo from '../ui/Todo.astro';
 import JourneyMap from './JourneyMap.astro';
 import OpeningLineArt from './OpeningLineArt.astro';
 
@@ -18,8 +21,10 @@ const t = getDictionary(locale);
 const steps = t.journey.steps;
 const pad = (n: number) => String(n).padStart(2, '0');
 
-// Steps without a photo: 3 and 4 get a figure card, 6 and 7 are told by the map.
-const photos: Record<number, ImageMetadata> = { 1: harvest, 2: drying, 5: packs };
+// Steps 3, 4, 6 and 7 use stock photos until we have our own (see CREDITS.md).
+const photos: Record<number, ImageMetadata> = { 1: harvest, 2: drying, 3: cracking, 4: lab, 5: packs, 6: istanbul, 7: nairobi };
+// Steps 6 and 7 are told mostly by the map, so on phones their photo shrinks to a thumbnail.
+const mapSteps = new Set([6, 7]);
 ---
 
 <section id="journey" class="journey" data-journey data-step="0" aria-labelledby="journey-title">
@@ -55,7 +60,7 @@ const photos: Record<number, ImageMetadata> = { 1: harvest, 2: drying, 5: packs 
         steps.map((step, index) => {
           const n = index + 1;
           const photo = photos[n];
-          const kind = photo ? 'photo' : step.figureValue ? 'figure' : 'map';
+          const kind = mapSteps.has(n) ? 'map' : 'photo';
           return (
             <li class:list={['step', `step--${kind}`]} data-step={n}>
               <article class="step__card" aria-labelledby={`step-${n}-title`}>
@@ -63,19 +68,12 @@ const photos: Record<number, ImageMetadata> = { 1: harvest, 2: drying, 5: packs 
                   <div class="step__media photo">
                     <Picture
                       src={photo}
-                      alt={step.alt ?? ''}
+                      alt={step.alt}
                       widths={[320, 480, 560, 720, 840, 1040]}
                       sizes="(min-width: 60rem) 520px, calc(100vw - 4rem)"
                       formats={['avif', 'webp']}
                       fallbackFormat="jpg"
                     />
-                  </div>
-                )}
-                {kind === 'figure' && (
-                  <div class="step__media step__figure">
-                    {step.todo && <Todo text={step.todo} label={t.todo} class="step__todo" />}
-                    <p class="step__figure-value">{step.figureValue}</p>
-                    <p class="step__figure-label">{step.figureLabel}</p>
                   </div>
                 )}
                 <div class="step__text">
@@ -196,37 +194,6 @@ const photos: Record<number, ImageMetadata> = { 1: harvest, 2: drying, 5: packs 
     object-fit: cover;
   }
 
-  .step__figure {
-    position: relative;
-    display: grid;
-    align-content: end;
-    gap: 0.5rem;
-    padding: clamp(1.25rem, 1rem + 1.5vw, 2rem);
-    background: var(--paper-deep);
-  }
-
-  .step__figure-value {
-    font-family: var(--font-display);
-    font-size: clamp(2.1rem, 1.6rem + 2.2vw, 3.25rem);
-    font-weight: 700;
-    line-height: 1.05;
-    color: var(--deep);
-  }
-
-  .step__figure-label {
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--green);
-  }
-
-  .step__figure :global(.step__todo) {
-    position: absolute;
-    top: 0.85rem;
-    left: 0.85rem;
-  }
-
   .step__text {
     display: grid;
     gap: 0.5rem;
@@ -332,19 +299,48 @@ const photos: Record<number, ImageMetadata> = { 1: harvest, 2: drying, 5: packs 
     padding-inline: 0.5rem;
   }
 
-  .journey.is-enhanced .step--map .step__text {
-    padding-top: 0.6rem;
-  }
-
   .journey.is-enhanced .step__media {
     aspect-ratio: 3 / 2;
     border-radius: 10px;
   }
 
-  .journey.is-enhanced .step__figure {
-    aspect-ratio: auto;
-    min-height: 10rem;
-    padding-top: 3.25rem;
+  /* Map-led steps on phones: a thumbnail beside the title keeps the map in view. */
+  @media (max-width: 59.99rem) {
+    .journey.is-enhanced .step--map .step__card {
+      display: grid;
+      grid-template-columns: 5.5rem minmax(0, 1fr);
+      column-gap: 0.9rem;
+      row-gap: 0.5rem;
+      padding: 0.75rem 1.25rem 1.4rem 0.75rem;
+    }
+
+    .journey.is-enhanced .step--map .step__media {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+      align-self: start;
+      aspect-ratio: 5 / 4;
+      border-radius: 8px;
+    }
+
+    .journey.is-enhanced .step--map .step__text {
+      display: contents;
+    }
+
+    .journey.is-enhanced .step--map .step__meta {
+      grid-column: 2;
+      align-self: end;
+      padding-top: 0.25rem;
+    }
+
+    .journey.is-enhanced .step--map .step__title {
+      grid-column: 2;
+      align-self: start;
+    }
+
+    .journey.is-enhanced .step--map .step__body {
+      grid-column: 1 / -1;
+      padding-inline: 0.5rem 0;
+    }
   }
 
   @media (min-width: 60rem) {
@@ -396,11 +392,6 @@ const photos: Record<number, ImageMetadata> = { 1: harvest, 2: drying, 5: packs 
     .journey.is-enhanced .step__media {
       aspect-ratio: 5 / 4;
       border-radius: 4px;
-    }
-
-    .journey.is-enhanced .step__figure {
-      aspect-ratio: 5 / 4;
-      padding-top: clamp(1.25rem, 1rem + 1.5vw, 2rem);
     }
   }
 </style>

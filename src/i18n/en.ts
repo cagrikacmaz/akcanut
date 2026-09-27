@@ -88,17 +88,13 @@ const en = {
         meta: 'Standard calibre 11 to 13 mm',
         title: 'Cracking and hand sorting',
         text: 'Once dry, the nuts are cracked and the kernels are sorted by hand.',
-        figureValue: 'By hand',
-        figureLabel: 'Kernel sorting',
-        todo: 'Photo needed: cracking and hand sorting',
+        alt: 'Close-up of cracked hazelnut shells among whole hazelnuts.',
       },
       {
         meta: 'Every lot',
         title: 'Lab testing',
         text: 'Every lot is tested for aflatoxin at an accredited laboratory. Results are within EU limits, and the certificate of analysis travels with the lot.',
-        figureValue: 'Within EU limits',
-        figureLabel: 'Aflatoxin results',
-        todo: 'Photo needed: lab testing',
+        alt: 'Clear laboratory beakers and a pipette on a white bench.',
       },
       {
         meta: 'Keeps 12 months unopened',
@@ -110,11 +106,13 @@ const en = {
         meta: 'FOB or FCA',
         title: 'Istanbul',
         text: 'Each lot ships from Istanbul, FOB or FCA, with its export documents.',
+        alt: 'The Bosphorus Bridge in Istanbul, with a cargo ship and a passenger boat on the water.',
       },
       {
         meta: 'By air and by sea',
         title: 'Nairobi',
         text: 'Pilot orders fly to Nairobi from 200 kg; sea shipments to Mombasa start at one tonne. With family in Kenya, we can be in Nairobi for tastings and launches.',
+        alt: 'The Nairobi skyline seen beyond acacia trees and grassland.',
       },
     ],
   },
@@ -249,6 +247,8 @@ const en = {
     languages: 'Languages',
     copyright: '© {year} AKCANUT',
     backToTop: 'Back to top',
+    // {names} becomes the linked photographer names.
+    photoCredits: 'Journey photos for steps 3, 4, 6 and 7 by {names} on Unsplash.',
   },
 
   notFound: {
