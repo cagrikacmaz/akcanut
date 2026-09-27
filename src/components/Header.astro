@@ -195,6 +195,11 @@ const links = [
       font-size: 1rem;
     }
 
+    /* Without JavaScript the links wrap under the brand, so the header scrolls away. */
+    :global(.no-js) .site-header {
+      position: static;
+    }
+
     :global(.no-js) .site-header__inner {
       flex-wrap: wrap;
       height: auto;
