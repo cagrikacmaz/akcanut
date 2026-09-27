@@ -20,14 +20,15 @@ const PLACES = {
 };
 
 // Stylised routes, drawn as smooth curves through these points (longitude, latitude).
+// Kept north of the Gulf of İzmit so the line never crosses water.
 const ROAD = [
   PLACES.akcakoca,
-  [31.12, 40.9],
-  [30.8, 40.76],
-  [30.3, 40.75],
-  [29.92, 40.78],
-  [29.43, 40.81],
-  [29.12, 40.96],
+  [31.13, 40.93],
+  [30.85, 40.81],
+  [30.4, 40.8],
+  [29.95, 40.85],
+  [29.5, 40.88],
+  [29.16, 40.98],
   PLACES.istanbul,
 ];
 const SEA = [
@@ -66,7 +67,7 @@ const SEA = [
 const VIEWS = {
   regional: {
     data: 'world-atlas/land-10m.json',
-    core: { lon: [27.9, 32.3], lat: [40.0, 42.1] },
+    core: { lon: [28.35, 31.75], lat: [40.25, 41.75] },
     width: 600,
     tolerance: 0.6,
     // Landscape frame on portrait screens: keep plenty of map above and below it.
@@ -75,8 +76,8 @@ const VIEWS = {
     places: ['akcakoca', 'istanbul'],
     routes: { road: ROAD },
     labels: {
-      blackSea: [30.55, 41.75],
-      marmara: [28.35, 40.72],
+      blackSea: [30.2, 41.45],
+      marmara: [29.0, 40.55],
     },
   },
   continental: {
@@ -88,13 +89,12 @@ const VIEWS = {
     graticuleStep: 10,
     places: ['akcakoca', 'istanbul', 'nairobi', 'mombasa'],
     routes: { road: ROAD, air: 'air', sea: SEA },
+    // Only a few labels, placed clear of the routes.
     labels: {
-      blackSea: [34.2, 43.2],
-      mediterranean: [26.2, 33.5],
-      redSea: [38.2, 21.2],
-      indianOcean: [50.5, -3.5],
+      blackSea: [36.0, 43.3],
+      indianOcean: [50.5, -1.5],
       turkiye: [34.5, 38.9],
-      kenya: [37.9, 1.0],
+      kenya: [40.0, 2.8],
     },
   },
 };

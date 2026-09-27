@@ -1,0 +1,406 @@
+---
+import { Picture } from 'astro:assets';
+import icon from '../../assets/brand/akcanut-icon.png';
+import packs from '../../assets/photos/kernels-vacuum-packs.png';
+import drying from '../../assets/photos/sun-drying-sacks.jpg';
+import harvest from '../../assets/photos/harvest-family.jpg';
+import { getDictionary, type Locale } from '../../i18n';
+import Todo from '../ui/Todo.astro';
+import JourneyMap from './JourneyMap.astro';
+import OpeningLineArt from './OpeningLineArt.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getDictionary(locale);
+const steps = t.journey.steps;
+const pad = (n: number) => String(n).padStart(2, '0');
+
+// Steps without a photo: 3 and 4 get a figure card, 6 and 7 are told by the map.
+const photos: Record<number, ImageMetadata> = { 1: harvest, 2: drying, 5: packs };
+---
+
+<section id="journey" class="journey" data-journey data-step="0" aria-labelledby="journey-title">
+  <div class="journey__opening container" data-journey-opening>
+    <div class="journey__mark">
+      <OpeningLineArt />
+      <Picture
+        src={icon}
+        alt={t.journey.iconAlt}
+        widths={[220, 330, 440, 600]}
+        sizes="(min-width: 60rem) 300px, 220px"
+        formats={['avif', 'webp']}
+        class="journey__icon"
+      />
+    </div>
+    <div class="journey__heading">
+      <p class="eyebrow">{t.journey.eyebrow}</p>
+      <h2 id="journey-title">{t.journey.title}</h2>
+      <p class="lead journey__intro">{t.journey.intro}</p>
+    </div>
+  </div>
+
+  <div class="journey__body">
+    <div class="journey__stage" data-journey-stage>
+      <JourneyMap locale={locale} />
+      <p class="journey__counter" aria-hidden="true">
+        <span data-journey-count>01</span> / {pad(steps.length)}
+      </p>
+    </div>
+
+    <ol class="journey__steps">
+      {
+        steps.map((step, index) => {
+          const n = index + 1;
+          const photo = photos[n];
+          const kind = photo ? 'photo' : step.figureValue ? 'figure' : 'map';
+          return (
+            <li class:list={['step', `step--${kind}`]} data-step={n}>
+              <article class="step__card" aria-labelledby={`step-${n}-title`}>
+                {photo && (
+                  <div class="step__media photo">
+                    <Picture
+                      src={photo}
+                      alt={step.alt ?? ''}
+                      widths={[320, 480, 640, 900]}
+                      sizes="(min-width: 60rem) 520px, calc(100vw - 4rem)"
+                      formats={['avif', 'webp']}
+                      fallbackFormat="jpg"
+                    />
+                  </div>
+                )}
+                {kind === 'figure' && (
+                  <div class="step__media step__figure">
+                    {step.todo && <Todo text={step.todo} label={t.todo} class="step__todo" />}
+                    <p class="step__figure-value">{step.figureValue}</p>
+                    <p class="step__figure-label">{step.figureLabel}</p>
+                  </div>
+                )}
+                <div class="step__text">
+                  <p class="step__meta">
+                    <span class="step__num">{pad(n)}</span>
+                    <span>{step.meta}</span>
+                  </p>
+                  <h3 class="step__title" id={`step-${n}-title`}>
+                    {step.title}
+                  </h3>
+                  <p class="step__body">{step.text}</p>
+                </div>
+              </article>
+            </li>
+          );
+        })
+      }
+    </ol>
+  </div>
+</section>
+
+<script>
+  import '../../scripts/journey';
+</script>
+
+<style>
+  /* Opening */
+
+  .journey__opening {
+    padding-block: var(--section-pad) clamp(3rem, 2rem + 4vw, 5rem);
+    text-align: center;
+  }
+
+  .journey__mark {
+    position: relative;
+    width: clamp(200px, 52vw, 300px);
+    aspect-ratio: 1024 / 1032;
+    margin: 0 auto clamp(2rem, 1.5rem + 2vw, 3rem);
+  }
+
+  .journey__mark :global(img) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .journey__heading {
+    display: grid;
+    justify-items: center;
+    gap: 1rem;
+    max-width: 40rem;
+    margin-inline: auto;
+  }
+
+  .journey__intro {
+    max-width: 32ch;
+  }
+
+  .journey.is-enhanced .journey__mark :global(picture) {
+    opacity: 0;
+    transition: opacity 0.7s var(--ease) 1.6s;
+  }
+
+  .journey.is-enhanced .journey__heading {
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity 0.7s var(--ease) 2.1s,
+      transform 0.7s var(--ease) 2.1s;
+  }
+
+  .journey.is-enhanced .is-drawn .journey__mark :global(picture),
+  .journey.is-enhanced .is-drawn .journey__heading {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Static layout: map as an overview, then the steps as a list. */
+
+  .journey__body {
+    width: min(100% - 2 * var(--gutter), var(--max));
+    margin-inline: auto;
+    padding-bottom: var(--section-pad);
+  }
+
+  .journey__stage {
+    position: relative;
+    height: min(78svh, 46rem);
+    max-width: 40rem;
+    margin: 0 auto clamp(3rem, 2rem + 3vw, 4.5rem);
+    overflow: hidden;
+    border: 1px solid var(--line-soft);
+    border-radius: var(--radius);
+    background: var(--paper-light);
+  }
+
+  .journey__counter {
+    display: none;
+  }
+
+  .journey__steps {
+    display: grid;
+    gap: clamp(3rem, 2rem + 3vw, 4.5rem);
+  }
+
+  .step__card {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .step__media {
+    aspect-ratio: 5 / 4;
+    border-radius: 4px;
+  }
+
+  .step__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .step__figure {
+    position: relative;
+    display: grid;
+    align-content: end;
+    gap: 0.5rem;
+    padding: clamp(1.25rem, 1rem + 1.5vw, 2rem);
+    background: var(--paper-deep);
+  }
+
+  .step__figure-value {
+    font-family: var(--font-display);
+    font-size: clamp(2.1rem, 1.6rem + 2.2vw, 3.25rem);
+    font-weight: 700;
+    line-height: 1.05;
+    color: var(--deep);
+  }
+
+  .step__figure-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--green);
+  }
+
+  .step__figure :global(.step__todo) {
+    position: absolute;
+    top: 0.85rem;
+    left: 0.85rem;
+  }
+
+  .step__text {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .step__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--brown);
+  }
+
+  .step__num {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+  }
+
+  .step__title {
+    font-size: var(--text-h3);
+  }
+
+  .step__body {
+    max-width: 34rem;
+  }
+
+  @media (min-width: 48rem) {
+    .journey:not(.is-enhanced) .journey__steps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: clamp(2rem, 4vw, 4rem);
+    }
+  }
+
+  /* Enhanced: the map is pinned and the steps scroll past it. */
+
+  .journey.is-enhanced .journey__body {
+    width: 100%;
+    padding-bottom: 0;
+  }
+
+  .journey.is-enhanced .journey__stage {
+    position: sticky;
+    top: var(--header-h);
+    height: calc(100svh - var(--header-h));
+    max-width: none;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background: var(--paper);
+  }
+
+  .journey.is-enhanced .journey__counter {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    display: block;
+    padding: 0.3rem 0.6rem;
+    border-radius: 999px;
+    background: rgb(251 250 246 / 0.9);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+    transition: opacity 0.4s var(--ease);
+  }
+
+  .journey.is-enhanced[data-step='0'] .journey__counter {
+    opacity: 0;
+  }
+
+  .journey.is-enhanced .journey__steps {
+    position: relative;
+    z-index: 1;
+    gap: 0;
+    margin-top: calc(-1 * (100svh - var(--header-h)));
+    /* Room after the last step so the pinned map stays whole while it is read. */
+    padding-bottom: 12svh;
+  }
+
+  /* On phones each card rests low on the screen, below the map's places. */
+  .journey.is-enhanced .step {
+    display: flex;
+    align-items: flex-end;
+    min-height: calc(100svh - var(--header-h));
+    padding: 8svh var(--gutter) 3svh;
+  }
+
+  .journey.is-enhanced .step__card {
+    width: 100%;
+    max-width: 26rem;
+    margin-inline: auto;
+    padding: 0.75rem 0.75rem 1.4rem;
+    border-radius: var(--radius);
+    background: var(--paper-light);
+    box-shadow:
+      0 0 0 1px rgb(6 51 33 / 0.06),
+      0 24px 48px -28px rgb(6 51 33 / 0.5);
+  }
+
+  .journey.is-enhanced .step__text {
+    padding-inline: 0.5rem;
+  }
+
+  .journey.is-enhanced .step--map .step__text {
+    padding-top: 0.6rem;
+  }
+
+  .journey.is-enhanced .step__media {
+    aspect-ratio: 3 / 2;
+    border-radius: 10px;
+  }
+
+  .journey.is-enhanced .step__figure {
+    aspect-ratio: auto;
+    min-height: 10rem;
+    padding-top: 3.25rem;
+  }
+
+  @media (min-width: 60rem) {
+    .journey.is-enhanced .journey__body {
+      display: grid;
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      column-gap: clamp(2.5rem, 5vw, 5rem);
+      width: min(100% - 2 * var(--gutter), var(--max));
+      margin-inline: auto;
+      padding-bottom: var(--section-pad);
+    }
+
+    .journey.is-enhanced .journey__stage {
+      grid-column: 2;
+      grid-row: 1;
+      align-self: start;
+      top: calc(var(--header-h) + 1.5rem);
+      height: calc(100svh - var(--header-h) - 3rem);
+      border: 1px solid var(--line-soft);
+      border-radius: var(--radius);
+      background: var(--paper-light);
+    }
+
+    .journey.is-enhanced .journey__steps {
+      grid-column: 1;
+      grid-row: 1;
+      margin-top: 0;
+      padding-bottom: 10svh;
+    }
+
+    .journey.is-enhanced .step {
+      align-items: center;
+      min-height: 86svh;
+      padding: 0;
+    }
+
+    .journey.is-enhanced .step__card {
+      max-width: none;
+      padding: 0;
+      border-radius: 0;
+      background: none;
+      box-shadow: none;
+    }
+
+    .journey.is-enhanced .step__text {
+      padding-inline: 0;
+    }
+
+    .journey.is-enhanced .step__media {
+      aspect-ratio: 5 / 4;
+      border-radius: 4px;
+    }
+
+    .journey.is-enhanced .step__figure {
+      aspect-ratio: 5 / 4;
+      padding-top: clamp(1.25rem, 1rem + 1.5vw, 2rem);
+    }
+  }
+</style>
