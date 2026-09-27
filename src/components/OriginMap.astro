@@ -1,0 +1,111 @@
+---
+// Small interactive map of Akçakoca (Leaflet + OpenStreetMap tiles), loaded only when the
+// section comes near the screen. Until then, and without JavaScript, a link stands in.
+import { getDictionary, type Locale } from '../i18n';
+import { siteConfig } from '../site.config';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getDictionary(locale);
+const { lat, lon } = siteConfig.akcakoca;
+const osmUrl = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=10/${lat}/${lon}`;
+---
+
+<div
+  class="origin-map"
+  data-origin-map
+  data-lat={lat}
+  data-lon={lon}
+  data-place={t.journey.places.akcakoca}
+  role="region"
+  aria-label={t.origin.mapLabel}
+>
+  <a class="origin-map__fallback" href={osmUrl} target="_blank" rel="noopener noreferrer">
+    {t.origin.mapLink}
+    <span class="visually-hidden">{t.a11y.newTab}</span>
+  </a>
+</div>
+
+<script>
+  import '../scripts/origin-map';
+</script>
+
+<style>
+  .origin-map {
+    position: relative;
+    height: clamp(18rem, 14rem + 16vw, 26rem);
+    overflow: hidden;
+    border: 1px solid rgb(246 242 232 / 0.25);
+    border-radius: var(--radius);
+    background: var(--paper-deep);
+    isolation: isolate;
+  }
+
+  .origin-map__fallback {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: var(--deep);
+    font-weight: 700;
+  }
+
+  /* Leaflet elements are created at runtime, so these rules are global. */
+  .origin-map :global(.leaflet-container) {
+    width: 100%;
+    height: 100%;
+    background: var(--paper-deep);
+    font-family: var(--font-body);
+  }
+
+  .origin-map :global(.leaflet-tile-pane) {
+    filter: grayscale(1) sepia(0.28) contrast(0.9) brightness(1.04);
+  }
+
+  .origin-map :global(.leaflet-control-attribution) {
+    background: rgb(251 250 246 / 0.9);
+    color: var(--ink);
+    font-size: 0.6875rem;
+  }
+
+  .origin-map :global(.leaflet-control-attribution a) {
+    color: var(--navy);
+  }
+
+  .origin-map :global(.leaflet-bar a) {
+    width: 2.25rem;
+    height: 2.25rem;
+    line-height: 2.25rem;
+    color: var(--deep);
+  }
+
+  .origin-map :global(.origin-pin) {
+    width: 18px;
+    height: 18px;
+    border: 3px solid var(--paper-light);
+    border-radius: 50%;
+    background: var(--brown);
+    box-shadow: 0 0 0 1px var(--brown);
+  }
+
+  .origin-map :global(.origin-pin-label.leaflet-tooltip) {
+    padding: 0.2rem 0.5rem;
+    border: 0;
+    border-radius: 4px;
+    background: var(--paper-light);
+    color: var(--deep);
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    box-shadow: 0 1px 2px rgb(6 51 33 / 0.2);
+  }
+
+  .origin-map :global(.origin-pin-label.leaflet-tooltip::before) {
+    display: none;
+  }
+</style>

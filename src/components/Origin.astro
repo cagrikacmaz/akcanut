@@ -1,0 +1,163 @@
+---
+import { Picture } from 'astro:assets';
+import hills from '../assets/photos/drying-hills.jpg';
+import canopy from '../assets/photos/orchard-canopy.jpg';
+import { getDictionary, type Locale } from '../i18n';
+import OriginMap from './OriginMap.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getDictionary(locale);
+const photoSizes = '(min-width: 60rem) 560px, calc(100vw - 2.5rem)';
+---
+
+<section id="origin" class="section section--deep origin" aria-labelledby="origin-title">
+  <div class="container origin__grid">
+    <header class="section-head origin__head">
+      <p class="eyebrow">{t.origin.eyebrow}</p>
+      <h2 id="origin-title">{t.origin.title}</h2>
+      <p class="lead">{t.origin.lead}</p>
+    </header>
+
+    <figure class="origin__figure origin__figure--canopy">
+      <div class="photo origin__photo">
+        <Picture src={canopy} alt={t.origin.canopyAlt} widths={[360, 560, 720, 900]} sizes={photoSizes} formats={['avif', 'webp']} />
+      </div>
+      <figcaption>{t.origin.canopyCaption}</figcaption>
+    </figure>
+
+    <div class="origin__family">
+      <h3>{t.origin.familyTitle}</h3>
+      <p>{t.origin.familyText}</p>
+      <div class="origin__registered">
+        <h3 class="label">{t.origin.registeredTitle}</h3>
+        <p>{t.origin.registeredText}</p>
+      </div>
+    </div>
+
+    <figure class="origin__figure origin__figure--hills">
+      <div class="photo origin__photo">
+        <Picture src={hills} alt={t.origin.hillsAlt} widths={[360, 560, 720, 1120]} sizes={photoSizes} formats={['avif', 'webp']} />
+      </div>
+      <figcaption>{t.origin.hillsCaption}</figcaption>
+    </figure>
+
+    <p class="origin__statement">{t.origin.statement}</p>
+
+    <div class="origin__map">
+      <h3>{t.origin.mapTitle}</h3>
+      <OriginMap locale={locale} />
+      <p class="origin__map-caption muted">{t.origin.mapCaption}</p>
+    </div>
+
+    <div class="origin__name">
+      <h3>{t.origin.nameTitle}</h3>
+      <p>{t.origin.nameText}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .origin__grid {
+    display: grid;
+    gap: clamp(2.5rem, 2rem + 3vw, 4.5rem);
+  }
+
+  .origin__photo {
+    aspect-ratio: 3 / 2;
+    border-radius: 4px;
+  }
+
+  .origin__family {
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+  }
+
+  .origin__registered {
+    display: grid;
+    gap: 0.6rem;
+    margin-top: 1rem;
+    padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+    border-radius: var(--radius);
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  .section--deep .origin__registered .label {
+    color: var(--brown);
+  }
+
+  .origin__statement {
+    max-width: 28ch;
+    margin-inline: auto;
+    padding-block: clamp(1rem, 0.5rem + 3vw, 3rem);
+    font-family: var(--font-display);
+    font-size: clamp(1.875rem, 1.3rem + 2.6vw, 3.25rem);
+    font-weight: 700;
+    line-height: 1.12;
+    text-align: center;
+    text-wrap: balance;
+    color: var(--paper);
+  }
+
+  .origin__map {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .origin__map-caption {
+    font-size: var(--text-small);
+  }
+
+  .origin__name {
+    display: grid;
+    gap: 0.75rem;
+    align-content: start;
+  }
+
+  @media (min-width: 60rem) {
+    .origin__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: clamp(2rem, 3vw, 3.5rem);
+      row-gap: clamp(4rem, 3rem + 3vw, 6rem);
+    }
+
+    .origin__head {
+      grid-column: 1 / span 5;
+      align-self: center;
+    }
+
+    .origin__figure--canopy {
+      grid-column: 7 / span 6;
+    }
+
+    .origin__figure--hills {
+      grid-column: 1 / span 6;
+      grid-row: 2;
+    }
+
+    .origin__family {
+      grid-column: 8 / span 5;
+      grid-row: 2;
+      align-self: center;
+    }
+
+    .origin__statement {
+      grid-column: 1 / -1;
+    }
+
+    .origin__map {
+      grid-column: 1 / span 8;
+    }
+
+    .origin__name {
+      grid-column: 10 / span 3;
+      align-self: end;
+      padding-bottom: 2.5rem;
+    }
+  }
+</style>
