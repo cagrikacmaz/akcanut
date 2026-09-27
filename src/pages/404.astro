@@ -1,0 +1,57 @@
+---
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { defaultLocale, getDictionary, languageNames, localePath, publishedLocales } from '../i18n';
+import Base from '../layouts/Base.astro';
+
+const t = getDictionary(defaultLocale);
+---
+
+<Base locale={defaultLocale} title={`${t.notFound.title} · AKCANUT`} noindex>
+  <Header locale={defaultLocale} />
+  <main id="main" tabindex="-1" class="not-found">
+    <div class="container not-found__inner">
+      <h1>{t.notFound.title}</h1>
+      <p class="lead">{t.notFound.text}</p>
+      <ul class="not-found__links">
+        {
+          publishedLocales.map((locale) => (
+            <li>
+              <a class="btn btn--secondary" href={localePath(locale)} hreflang={locale} lang={locale}>
+                {getDictionary(locale).notFound.home}
+                {publishedLocales.length > 1 && <span class="visually-hidden"> ({languageNames[locale]})</span>}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </main>
+  <Footer locale={defaultLocale} />
+</Base>
+
+<style>
+  .not-found {
+    padding-block: var(--section-pad);
+  }
+
+  .not-found__inner {
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+    min-height: 50svh;
+    align-content: center;
+  }
+
+  .not-found h1 {
+    font-size: var(--text-h2);
+    line-height: 1.08;
+  }
+
+  .not-found__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+</style>
