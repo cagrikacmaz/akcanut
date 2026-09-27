@@ -1,0 +1,137 @@
+---
+import { fill, getDictionary, mailtoLink, whatsappLink, type Locale } from '../i18n';
+import { siteConfig } from '../site.config';
+import Icon from './ui/Icon.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getDictionary(locale);
+const { contacts } = siteConfig;
+
+const people = [
+  { label: t.contact.turkiyeLabel, person: contacts.turkiye, message: t.whatsapp.general },
+  { label: t.contact.nairobiLabel, person: contacts.nairobi, message: t.whatsapp.nairobi },
+];
+const tel = (phone: string) => `tel:${phone.replace(/\s+/g, '')}`;
+// Uppercase labels need Turkish casing rules to keep the dotted İ in TÜRKİYE.
+const langFor = (text: string) => (text === 'Türkiye' ? 'tr' : undefined);
+---
+
+<section id="contact" class="section contact" aria-labelledby="contact-title">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">{t.contact.eyebrow}</p>
+      <h2 id="contact-title">{t.contact.title}</h2>
+      <p class="lead">{t.contact.lead}</p>
+    </header>
+
+    <ul class="contact__cards">
+      {
+        people.map(({ label, person, message }) => (
+          <li class="card contact__card">
+            <p class="label" lang={langFor(label)}>
+              {label}
+            </p>
+            <p class="contact__name">{person.name}</p>
+            <a class="contact__phone" href={tel(person.phone)}>
+              {person.phone}
+            </a>
+            <a
+              class="btn btn--primary contact__whatsapp"
+              href={whatsappLink(person.whatsapp, message)}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${fill(t.contact.whatsappLabel, { name: person.name })} ${t.a11y.newTab}`}
+            >
+              <Icon name="chat" />
+              {t.contact.whatsapp}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="contact__email">
+      <span class="label">{t.contact.emailLabel}</span>
+      <a href={mailtoLink(contacts.email, t.contact.emailSubject)}>
+        <Icon name="mail" />
+        {contacts.email}
+      </a>
+    </p>
+  </div>
+</section>
+
+<style>
+  .contact__cards {
+    display: grid;
+    gap: 1rem;
+    margin-top: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+  }
+
+  .contact__card {
+    display: grid;
+    justify-items: start;
+    gap: 0.4rem;
+    padding: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem);
+  }
+
+  .contact__name {
+    margin-top: 0.4rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 1.3rem + 0.8vw, 1.9rem);
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--deep);
+  }
+
+  .contact__phone {
+    color: var(--ink);
+    font-size: 1.0625rem;
+    font-variant-numeric: tabular-nums;
+    text-decoration: none;
+  }
+
+  .contact__phone:hover {
+    text-decoration: underline;
+  }
+
+  .contact__whatsapp {
+    margin-top: 1rem;
+  }
+
+  .contact__email {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.25rem;
+    margin-top: 2rem;
+  }
+
+  .contact__email a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    color: var(--deep);
+    font-size: 1.125rem;
+    font-weight: 700;
+    word-break: break-word;
+  }
+
+  .contact__email :global(svg) {
+    flex: none;
+    width: 1.3rem;
+    height: 1.3rem;
+    color: var(--brown);
+  }
+
+  @media (min-width: 48rem) {
+    .contact__cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.25rem;
+    }
+  }
+</style>

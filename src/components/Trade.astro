@@ -1,0 +1,241 @@
+---
+import { stat } from 'node:fs/promises';
+import path from 'node:path';
+import { fill, getDictionary, mailtoLink, publicPath, whatsappLink, type Locale } from '../i18n';
+import { siteConfig } from '../site.config';
+import Icon from './ui/Icon.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getDictionary(locale);
+const { contacts, brandProfile } = siteConfig;
+
+// Every lead from the website goes to the company contact in Türkiye.
+const sampleLink = whatsappLink(contacts.turkiye.whatsapp, t.whatsapp.sample);
+const sampleMail = mailtoLink(contacts.email, t.trade.emailSubject);
+const nairobiLink = whatsappLink(contacts.nairobi.whatsapp, t.whatsapp.nairobi);
+
+// Builds run from the project root, so the file size is read from ./public.
+const { size } = await stat(path.resolve('public', brandProfile.file));
+const pdfMeta = fill(t.trade.downloadMeta, {
+  pages: brandProfile.pages,
+  size: `${(size / 1024 / 1024).toFixed(1)} MB`,
+});
+---
+
+<section id="trade" class="section section--deep trade" aria-labelledby="trade-title">
+  <div class="container trade__grid">
+    <div class="trade__intro">
+      <header class="section-head">
+        <p class="eyebrow">{t.trade.eyebrow}</p>
+        <h2 id="trade-title">{t.trade.title}</h2>
+        <p class="lead">{t.trade.lead}</p>
+      </header>
+
+      <div class="trade__who">
+        <h3 class="label">{t.trade.whoTitle}</h3>
+        <ul class="trade__who-list">
+          {t.trade.who.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+
+      <div class="trade__cta">
+        <a class="btn btn--gold" href={sampleLink} target="_blank" rel="noopener noreferrer">
+          <Icon name="chat" />
+          {t.trade.sampleCta}
+          <span class="visually-hidden">{t.a11y.newTab}</span>
+        </a>
+        <p>
+          {t.trade.emailPrompt} <a href={sampleMail}>{contacts.email}</a>
+        </p>
+        <p>
+          {t.trade.kenyaPrompt}
+          <a href={nairobiLink} target="_blank" rel="noopener noreferrer">
+            {t.trade.kenyaCta}<span class="visually-hidden"> {t.a11y.newTab}</span>
+          </a>
+        </p>
+      </div>
+    </div>
+
+    <div class="trade__how">
+      <h3>{t.trade.howTitle}</h3>
+      <dl class="trade__terms">
+        {
+          t.trade.how.map((row) => (
+            <div class="trade__term">
+              <dt>{row.term}</dt>
+              <dd>{row.detail}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <p class="trade__pricing">{t.trade.pricing}</p>
+
+      <a class="trade__download" href={publicPath(brandProfile.file)} download>
+        <span class="trade__download-icon"><Icon name="download" /></span>
+        <span class="trade__download-text">
+          <span class="trade__download-title">{t.trade.downloadTitle}</span>
+          <span class="trade__download-meta">{pdfMeta}</span>
+        </span>
+        <span class="trade__download-cta">{t.trade.downloadCta}</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .trade__grid {
+    display: grid;
+    gap: clamp(3rem, 2.5rem + 3vw, 5rem);
+  }
+
+  .trade__intro {
+    display: grid;
+    gap: clamp(2rem, 1.5rem + 2vw, 3rem);
+    align-content: start;
+  }
+
+  .trade__who {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .trade__who-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .trade__who-list li {
+    padding: 0.5rem 1rem;
+    border: 1px solid rgb(246 242 232 / 0.3);
+    border-radius: 999px;
+    color: var(--paper);
+    font-weight: 700;
+    font-size: 0.9375rem;
+  }
+
+  .trade__cta {
+    display: grid;
+    justify-items: start;
+    gap: 0.75rem;
+    color: var(--on-deep-muted);
+  }
+
+  .trade__cta .btn {
+    min-height: 3.5rem;
+    margin-bottom: 0.5rem;
+    padding-inline: 2rem;
+    font-size: 1.05rem;
+  }
+
+  .trade__cta a:not(.btn) {
+    color: var(--paper);
+  }
+
+  .trade__how {
+    display: grid;
+    gap: 1.5rem;
+    align-content: start;
+  }
+
+  .trade__terms {
+    border-top: 1px solid rgb(246 242 232 / 0.18);
+  }
+
+  .trade__term {
+    display: grid;
+    gap: 0.2rem;
+    padding-block: 0.9rem;
+    border-bottom: 1px solid rgb(246 242 232 / 0.18);
+  }
+
+  .trade__term dt {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .trade__term dd {
+    color: var(--paper);
+  }
+
+  .trade__pricing {
+    color: var(--on-deep-muted);
+    font-size: 0.9375rem;
+  }
+
+  .trade__download {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    padding: 1.1rem 1.25rem;
+    border-radius: var(--radius);
+    background: var(--deep-card);
+    color: var(--paper);
+    text-decoration: none;
+    transition: background-color 0.2s var(--ease);
+  }
+
+  .trade__download:hover {
+    background: #185239;
+  }
+
+  .trade__download-icon {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    background: var(--gold);
+    color: var(--deep);
+  }
+
+  .trade__download-icon :global(svg) {
+    width: 1.3rem;
+    height: 1.3rem;
+  }
+
+  .trade__download-text {
+    display: grid;
+    gap: 0.1rem;
+  }
+
+  .trade__download-title {
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .trade__download-meta {
+    font-size: 0.8125rem;
+    color: var(--on-deep-muted);
+  }
+
+  .trade__download-cta {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  @media (min-width: 40rem) {
+    .trade__term {
+      grid-template-columns: 11rem 1fr;
+      gap: 1.5rem;
+      align-items: baseline;
+    }
+  }
+
+  @media (min-width: 60rem) {
+    .trade__grid {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      column-gap: clamp(3rem, 6vw, 6rem);
+    }
+  }
+</style>

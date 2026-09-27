@@ -1,0 +1,170 @@
+---
+import { Picture } from 'astro:assets';
+import kernels from '../assets/photos/kernels-close-up.png';
+import { getDictionary, whatsappLink, type Locale } from '../i18n';
+import { siteConfig } from '../site.config';
+import Icon from './ui/Icon.astro';
+import Todo from './ui/Todo.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getDictionary(locale);
+// Consumers asking where to buy are sent to the Nairobi contact.
+const whereToBuy = whatsappLink(siteConfig.contacts.nairobi.whatsapp, t.whatsapp.whereToBuy);
+---
+
+<section id="product" class="section product" aria-labelledby="product-title">
+  <div class="container product__grid">
+    <div class="product__photo photo">
+      <Picture
+        src={kernels}
+        alt={t.product.photoAlt}
+        widths={[360, 495]}
+        sizes="(min-width: 60rem) 440px, calc(100vw - 2.5rem)"
+        formats={['avif', 'webp']}
+        fallbackFormat="jpg"
+      />
+    </div>
+
+    <div class="product__intro">
+      <header class="section-head">
+        <p class="eyebrow">{t.product.eyebrow}</p>
+        <h2 id="product-title">{t.product.title}</h2>
+        <p class="lead">{t.product.lead}</p>
+      </header>
+      <div class="product__raw">
+        <h3>{t.product.rawTitle}</h3>
+        <p>{t.product.rawText}</p>
+      </div>
+    </div>
+
+    <div class="product__home">
+      <h3>{t.product.homeTitle}</h3>
+      <ul class="product__cards">
+        {
+          t.product.home.map((item) => (
+            <li class="card product__card">
+              <h4 class="product__card-title">{item.title}</h4>
+              <p>{item.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="product__storage">
+      <h3>{t.product.storageTitle}</h3>
+      <p>{t.product.storageText}</p>
+    </div>
+
+    <div class="product__find">
+      <h3>{t.product.findTitle}</h3>
+      <p>{t.product.findText}</p>
+      <a class="btn btn--secondary" href={whereToBuy} target="_blank" rel="noopener noreferrer">
+        <Icon name="chat" />
+        {t.product.findCta}
+        <span class="visually-hidden">{t.a11y.newTab}</span>
+      </a>
+      <Todo text={t.product.findTodo} label={t.todo} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .product__grid {
+    display: grid;
+    gap: clamp(2.5rem, 2rem + 3vw, 4rem);
+  }
+
+  .product__photo {
+    aspect-ratio: 495 / 511;
+    max-width: 30rem;
+    border-radius: 4px;
+  }
+
+  .product__intro {
+    display: grid;
+    gap: clamp(2rem, 1.5rem + 2vw, 3rem);
+    align-content: center;
+  }
+
+  .product__raw,
+  .product__storage,
+  .product__find {
+    display: grid;
+    gap: 0.75rem;
+    align-content: start;
+    max-width: 36rem;
+  }
+
+  .product__home {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .product__cards {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .product__card {
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+  }
+
+  .product__card-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--deep);
+  }
+
+  .product__find {
+    justify-items: start;
+  }
+
+  .product__find .btn {
+    margin-top: 0.5rem;
+  }
+
+  @media (min-width: 48rem) {
+    .product__cards {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 60rem) {
+    .product__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: clamp(2rem, 3vw, 3.5rem);
+      row-gap: clamp(3.5rem, 3rem + 2vw, 5rem);
+    }
+
+    .product__photo {
+      grid-column: 1 / span 5;
+      max-width: none;
+    }
+
+    .product__intro {
+      grid-column: 7 / span 6;
+    }
+
+    .product__home {
+      grid-column: 1 / -1;
+    }
+
+    .product__storage {
+      grid-column: 1 / span 6;
+    }
+
+    .product__find {
+      grid-column: 8 / span 5;
+    }
+  }
+</style>

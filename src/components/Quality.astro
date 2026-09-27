@@ -1,0 +1,73 @@
+---
+import { getDictionary, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getDictionary(locale);
+---
+
+<section id="quality" class="section section--light quality" aria-labelledby="quality-title">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">{t.quality.eyebrow}</p>
+      <h2 id="quality-title">{t.quality.title}</h2>
+      <p class="lead">{t.quality.lead}</p>
+    </header>
+
+    <dl class="quality__specs">
+      {
+        t.quality.specs.map((spec) => (
+          <div class="card quality__spec">
+            <dt class="label">{spec.label}</dt>
+            <dd class="quality__value">{spec.value}</dd>
+            <dd class="quality__note muted">{spec.note}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
+
+<style>
+  .quality__specs {
+    display: grid;
+    gap: 1rem;
+    margin-top: clamp(2.5rem, 2rem + 2vw, 4rem);
+  }
+
+  .quality__spec {
+    display: grid;
+    gap: 0.5rem;
+    align-content: start;
+    background: var(--paper);
+  }
+
+  .quality__value {
+    margin-top: 0.35rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 1.3rem + 0.8vw, 1.9rem);
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--deep);
+  }
+
+  .quality__note {
+    font-size: 0.9375rem;
+  }
+
+  @media (min-width: 40rem) {
+    .quality__specs {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 60rem) {
+    .quality__specs {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.25rem;
+    }
+  }
+</style>
