@@ -9,10 +9,9 @@ export const siteConfig = {
   showTodos: false,
 
   /**
-   * Languages that are live. The switcher, hreflang tags and sitemap only list these.
-   * Add 'tr' and 'sw' once their files have been reviewed.
+   * Languages that are live. The language menu, hreflang tags and sitemap list these.
    */
-  publishedLocales: ['en'] as const satisfies readonly ('en' | 'tr' | 'sw')[],
+  publishedLocales: ['en', 'tr', 'sw'] as const satisfies readonly ('en' | 'tr' | 'sw')[],
 
   /**
    * Show languages that are drafted but not yet published, for local testing only:

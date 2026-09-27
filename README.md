@@ -58,7 +58,7 @@ touching. House rules for the copy, taken from the brand guide:
 
 ## Languages
 
-English is at the site root; other languages live at `/tr/` and `/sw/`. Each
+English is at the site root, Turkish at `/tr/` and Swahili at `/sw/`. Each
 language is one file in `src/i18n/` (`tr.ts`, `sw.ts`) that must mirror every key of
 `en.ts`; the build fails if a key is missing, empty or misspelt. Pages are created
 automatically for every language file.
@@ -72,9 +72,6 @@ The globe button in the header opens the language menu. Switching language keeps
 the visitor on the section they were reading. The site never redirects by browser
 language; on the English page, a visitor whose browser prefers Turkish or Swahili
 sees one small hint next to the globe, which stays closed once dismissed.
-
-The Swahili file is marked "native review needed" at the top until a native
-speaker has checked it.
 
 ## Assets
 
@@ -137,7 +134,7 @@ deployment → Source: GitHub Actions**.
 - [ ] Stockists in Nairobi, once confirmed ("Where to find it")
 - [ ] A higher-resolution photo of loose kernels: the current kernel photos are
       about 490 px wide, so they are never shown larger than that
-- [ ] Turkish and Swahili versions; native review of the Swahili file
+- [x] Turkish and Swahili versions (Swahili checked by a native speaker)
 - [x] Set `showTodos` to `false` for launch (set back to `true` to see the TODO tags)
 
 ## Credits
