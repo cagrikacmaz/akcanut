@@ -29,7 +29,7 @@ const t = getDictionary(locale);
       description={description ?? t.meta.description}
       noindex={noindex}
     />
-    <Font cssVariable="--font-display" preload={[{ subset: 'latin', weight: '700' }]} />
+    <Font cssVariable="--font-display" preload={[{ weight: '700' }]} />
     <Font cssVariable="--font-body" preload={[{ subset: 'latin', weight: '400' }]} />
     <link rel="icon" href={publicPath('favicon.ico')} sizes="32x32" />
     <link rel="icon" href={publicPath('icon-192.png')} type="image/png" sizes="192x192" />
