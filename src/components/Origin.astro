@@ -24,7 +24,13 @@ const photoSizes = '(min-width: 60rem) 560px, calc(100vw - 2.5rem)';
 
     <figure class="origin__figure origin__figure--canopy">
       <div class="photo origin__photo">
-        <Picture src={canopy} alt={t.origin.canopyAlt} widths={[360, 560, 720, 900]} sizes={photoSizes} formats={['avif', 'webp']} />
+        <Picture
+          src={canopy}
+          alt={t.origin.canopyAlt}
+          widths={[360, 560, 720, 900]}
+          sizes={photoSizes}
+          formats={['avif', 'webp']}
+        />
       </div>
       <figcaption>{t.origin.canopyCaption}</figcaption>
     </figure>
@@ -40,7 +46,13 @@ const photoSizes = '(min-width: 60rem) 560px, calc(100vw - 2.5rem)';
 
     <figure class="origin__figure origin__figure--hills">
       <div class="photo origin__photo">
-        <Picture src={hills} alt={t.origin.hillsAlt} widths={[360, 560, 720, 1120]} sizes={photoSizes} formats={['avif', 'webp']} />
+        <Picture
+          src={hills}
+          alt={t.origin.hillsAlt}
+          widths={[360, 560, 720, 1120]}
+          sizes={photoSizes}
+          formats={['avif', 'webp']}
+        />
       </div>
       <figcaption>{t.origin.hillsCaption}</figcaption>
     </figure>
