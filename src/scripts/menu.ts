@@ -7,6 +7,8 @@ if (nav && toggle && label) {
   const setOpen = (open: boolean) => {
     toggle.setAttribute('aria-expanded', String(open));
     nav.classList.toggle('is-open', open);
+    // Only one menu at a time: close the language menu.
+    if (open) document.querySelector<HTMLButtonElement>('[data-lang-toggle][aria-expanded="true"]')?.click();
     label.textContent = (open ? toggle.dataset.labelClose : toggle.dataset.labelOpen) ?? '';
   };
 

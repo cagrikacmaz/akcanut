@@ -27,6 +27,9 @@ const en = {
     menuOpen: 'Menu',
     menuClose: 'Close',
     languages: 'Language',
+    changeLanguage: 'Change language',
+    // Shown on the English page to visitors whose browser prefers this language.
+    viewInLanguage: 'View in English',
     newTab: '(opens in a new tab)',
   },
 

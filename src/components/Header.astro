@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import icon from '../assets/brand/akcanut-icon.png';
 import { getDictionary, localePath, type Locale } from '../i18n';
-import LanguageSwitcher from './LanguageSwitcher.astro';
+import LanguageMenu from './LanguageMenu.astro';
 
 interface Props {
   locale: Locale;
@@ -52,7 +52,7 @@ const links = [
       </ul>
     </nav>
 
-    <LanguageSwitcher locale={locale} />
+    <LanguageMenu locale={locale} />
   </div>
 </header>
 

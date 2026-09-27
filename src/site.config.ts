@@ -14,6 +14,14 @@ export const siteConfig = {
    */
   publishedLocales: ['en'] as const satisfies readonly ('en' | 'tr' | 'sw')[],
 
+  /**
+   * Show languages that are drafted but not yet published, for local testing only:
+   * always in `npm run dev`, and in a build started with PREVIEW_LANGUAGES=true.
+   * The deploy workflow never sets it, so drafts stay out of the published site.
+   */
+  previewLanguages:
+    import.meta.env.DEV || (typeof process !== 'undefined' && process.env.PREVIEW_LANGUAGES === 'true'),
+
   contacts: {
     turkiye: { name: 'Çağrı Kaçmaz', phone: '+90 536 329 78 78', whatsapp: '905363297878' },
     nairobi: { name: 'Ahmed Mwangi Hassan', phone: '+254 706 381 401', whatsapp: '254706381401' },

@@ -31,7 +31,7 @@ const urlFor = (name: string) => photoCredits.find((c) => c.photographer === nam
         <p class="site-footer__tagline">{t.footer.tagline}</p>
       </div>
     </div>
-    <LanguageSwitcher locale={locale} variant="footer" />
+    <LanguageSwitcher locale={locale} />
     <div class="site-footer__meta">
       <p>{fill(t.footer.copyright, { year })}</p>
       <a href="#top">{t.footer.backToTop}</a>

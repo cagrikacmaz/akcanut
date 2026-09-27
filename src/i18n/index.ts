@@ -1,17 +1,33 @@
 import { siteConfig } from '../site.config';
 import en, { type Dictionary } from './en';
 
+// Other language files are picked up when they exist (tr.ts, sw.ts).
+const otherFiles = import.meta.glob<{ default: Dictionary }>(['./tr.ts', './sw.ts'], { eager: true });
+
 export const locales = ['en', 'tr', 'sw'] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = 'en';
 
-/** Language files that exist. Turkish and Swahili are added after review. */
-const dictionaries: Partial<Record<Locale, Dictionary>> = { en };
+/** Language files that exist. A language only goes live once listed in siteConfig.publishedLocales. */
+const dictionaries: Partial<Record<Locale, Dictionary>> = {
+  en,
+  ...Object.fromEntries(
+    Object.entries(otherFiles).map(([file, mod]) => [file.replace(/^\.\/|\.ts$/g, ''), mod.default]),
+  ),
+};
 
 /** Live languages, in switcher order. */
 export const publishedLocales: Locale[] = locales.filter(
   (l) => (siteConfig.publishedLocales as readonly string[]).includes(l) && dictionaries[l],
 );
+
+/**
+ * Languages that get a page and appear in the language menu: the published ones, plus any
+ * drafted file when previewing locally. Sitemap and hreflang only ever use publishedLocales.
+ */
+export const availableLocales: Locale[] = siteConfig.previewLanguages
+  ? locales.filter((l) => dictionaries[l])
+  : publishedLocales;
 
 /** Native language names for the switcher. */
 export const languageNames: Record<Locale, string> = {

@@ -56,14 +56,22 @@ touching. House rules for the copy, taken from the brand guide:
 - `contacts`: names, phone numbers and WhatsApp numbers. Sample requests go to the
   company contact in Türkiye; the "Where to find it" consumer message goes to Nairobi.
 
-## Adding Turkish and Swahili
+## Languages
 
-1. Copy `src/i18n/en.ts` to `tr.ts` or `sw.ts` and translate the values. Keep every
-   key: the build fails if a key is missing, empty or misspelt.
-2. Register the file in the `dictionaries` object in `src/i18n/index.ts`.
-3. Add the page: `src/pages/tr/index.astro` containing `<HomePage locale="tr" />`
-   (same pattern as `src/pages/index.astro`).
-4. Add the language to `publishedLocales` in `src/site.config.ts`.
+English is at the site root; other languages live at `/tr/` and `/sw/`. Each
+language is one file in `src/i18n/` (`tr.ts`, `sw.ts`) that must mirror every key of
+`en.ts`; the build fails if a key is missing, empty or misspelt. Pages are created
+automatically for every language file.
+
+A language goes live when it is added to `publishedLocales` in `src/site.config.ts`.
+Until then it is a draft: it appears only in `npm run dev`, or in a local build
+started with `PREVIEW_LANGUAGES=true npm run build`, so it can be checked without
+being published. The sitemap and hreflang tags only ever list published languages.
+
+The globe button in the header opens the language menu. Switching language keeps
+the visitor on the section they were reading. The site never redirects by browser
+language; on the English page, a visitor whose browser prefers Turkish or Swahili
+sees one small hint next to the globe, which stays closed once dismissed.
 
 The Swahili file is marked "native review needed" at the top until a native
 speaker has checked it.

@@ -1,30 +1,23 @@
 ---
-import { getDictionary, languageNames, localePath, publishedLocales, type Locale } from '../i18n';
+// Footer language links, each in its own name. The header uses LanguageMenu instead.
+import { availableLocales, getDictionary, languageNames, localePath, type Locale } from '../i18n';
 
 interface Props {
   locale: Locale;
-  variant?: 'header' | 'footer';
 }
 
-const { locale, variant = 'header' } = Astro.props;
+const { locale } = Astro.props;
 const t = getDictionary(locale);
 ---
 
 {
-  publishedLocales.length > 1 && (
-    <nav class:list={['lang', `lang--${variant}`]} aria-label={t.a11y.languages}>
-      <ul class="lang__list">
-        {publishedLocales.map((l) => (
+  availableLocales.length > 1 && (
+    <nav class="lang-links" aria-label={t.a11y.languages}>
+      <ul>
+        {availableLocales.map((l) => (
           <li>
-            <a href={localePath(l)} hreflang={l} lang={l} aria-current={l === locale ? 'page' : undefined}>
-              {variant === 'header' ? (
-                <>
-                  <span aria-hidden="true">{l.toUpperCase()}</span>
-                  <span class="visually-hidden">{languageNames[l]}</span>
-                </>
-              ) : (
-                languageNames[l]
-              )}
+            <a href={localePath(l)} hreflang={l} lang={l} aria-current={l === locale ? 'true' : undefined} data-lang-link>
+              {languageNames[l]}
             </a>
           </li>
         ))}
@@ -34,45 +27,33 @@ const t = getDictionary(locale);
 }
 
 <style>
-  .lang__list {
+  .lang-links ul {
     display: flex;
-    align-items: center;
-    gap: 0.15rem;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
 
-  .lang a {
+  .lang-links a {
     display: inline-flex;
     align-items: center;
     min-height: 2.75rem;
-    padding-inline: 0.45rem;
-    font-size: 0.8125rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
+    font-size: 0.9375rem;
+    color: var(--ink-soft);
     text-decoration: none;
-    color: var(--ink-muted);
   }
 
-  .lang a:hover {
-    color: var(--brown);
+  .lang-links a:hover {
+    text-decoration: underline;
   }
 
-  .lang a[aria-current='page'] {
+  .lang-links a[aria-current='true'] {
     color: var(--deep);
+    font-weight: 700;
     text-decoration: underline;
     text-decoration-color: var(--brown);
-    text-decoration-thickness: 2px;
-    text-underline-offset: 0.45em;
-  }
-
-  .lang--footer .lang__list {
-    flex-wrap: wrap;
-    gap: 0.25rem 1.25rem;
-  }
-
-  .lang--footer a {
-    padding-inline: 0;
-    font-size: 0.9375rem;
-    letter-spacing: 0.01em;
-    color: var(--ink-soft);
+    text-underline-offset: 0.35em;
   }
 </style>

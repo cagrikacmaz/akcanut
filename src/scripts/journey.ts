@@ -14,6 +14,13 @@ function enhance(section: HTMLElement) {
   section.classList.add('is-enhanced');
   section.dataset.step = '0';
 
+  // The pinned layout makes this section much taller than the static one the browser
+  // measured when it jumped to a #section link, so jump again to the right place.
+  const target = location.hash ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null;
+  if (target && target !== section && section.compareDocumentPosition(target) & Node.DOCUMENT_POSITION_FOLLOWING) {
+    requestAnimationFrame(() => target.scrollIntoView({ behavior: 'instant', block: 'start' }));
+  }
+
   // Opening: draw the line art once, when the frame is well in view.
   const opening = section.querySelector<HTMLElement>('[data-journey-opening]');
   if (opening) {
