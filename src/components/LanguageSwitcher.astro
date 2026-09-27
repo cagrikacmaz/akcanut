@@ -1,0 +1,78 @@
+---
+import { getDictionary, languageNames, localePath, publishedLocales, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+  variant?: 'header' | 'footer';
+}
+
+const { locale, variant = 'header' } = Astro.props;
+const t = getDictionary(locale);
+---
+
+{
+  publishedLocales.length > 1 && (
+    <nav class:list={['lang', `lang--${variant}`]} aria-label={t.a11y.languages}>
+      <ul class="lang__list">
+        {publishedLocales.map((l) => (
+          <li>
+            <a href={localePath(l)} hreflang={l} lang={l} aria-current={l === locale ? 'page' : undefined}>
+              {variant === 'header' ? (
+                <>
+                  <span aria-hidden="true">{l.toUpperCase()}</span>
+                  <span class="visually-hidden">{languageNames[l]}</span>
+                </>
+              ) : (
+                languageNames[l]
+              )}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
+
+<style>
+  .lang__list {
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+  }
+
+  .lang a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding-inline: 0.45rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    color: var(--ink-muted);
+  }
+
+  .lang a:hover {
+    color: var(--brown);
+  }
+
+  .lang a[aria-current='page'] {
+    color: var(--deep);
+    text-decoration: underline;
+    text-decoration-color: var(--brown);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.45em;
+  }
+
+  .lang--footer .lang__list {
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+  }
+
+  .lang--footer a {
+    padding-inline: 0;
+    font-size: 0.9375rem;
+    letter-spacing: 0.01em;
+    color: var(--ink-soft);
+  }
+</style>

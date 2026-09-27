@@ -1,0 +1,88 @@
+---
+import { Image } from 'astro:assets';
+import icon from '../assets/brand/akcanut-icon.png';
+import { fill, getDictionary, type Locale } from '../i18n';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getDictionary(locale);
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <div class="site-footer__brand">
+      <Image src={icon} alt="" width={56} height={56} densities={[1.5, 2, 3]} class="site-footer__icon" />
+      <div>
+        <p class="site-footer__name">AKCANUT</p>
+        <p class="site-footer__tagline">{t.footer.tagline}</p>
+      </div>
+    </div>
+    <LanguageSwitcher locale={locale} variant="footer" />
+    <div class="site-footer__meta">
+      <p>{fill(t.footer.copyright, { year })}</p>
+      <a href="#top">{t.footer.backToTop}</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding-block: clamp(3rem, 2rem + 3vw, 4.5rem);
+    border-top: 1px solid var(--line);
+    background: var(--paper-deep);
+    font-size: 0.9375rem;
+  }
+
+  .site-footer__inner {
+    display: grid;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .site-footer__brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .site-footer__icon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .site-footer__name {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    line-height: 1.1;
+    color: var(--deep);
+  }
+
+  .site-footer__tagline {
+    color: var(--ink-soft);
+  }
+
+  .site-footer__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    color: var(--ink-soft);
+  }
+
+  .site-footer__meta a {
+    color: var(--ink);
+  }
+
+  @media (min-width: 48rem) {
+    .site-footer__inner {
+      grid-template-columns: 1fr auto auto;
+      gap: 2.5rem;
+    }
+  }
+</style>

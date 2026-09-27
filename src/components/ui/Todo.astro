@@ -1,0 +1,20 @@
+---
+// Marks content that is still missing. Hidden everywhere when siteConfig.showTodos is false.
+import { siteConfig } from '../../site.config';
+
+interface Props {
+  text: string;
+  label?: string;
+  class?: string;
+}
+
+const { text, label = 'TODO', class: className } = Astro.props;
+---
+
+{
+  siteConfig.showTodos && (
+    <span class:list={['todo', className]} role="note">
+      {label} · {text}
+    </span>
+  )
+}

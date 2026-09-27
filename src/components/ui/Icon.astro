@@ -1,0 +1,35 @@
+---
+// Small line icons drawn for this site (not brand logos).
+interface Props {
+  name: 'chat' | 'download' | 'mail' | 'arrow';
+  class?: string;
+}
+
+const { name, class: className } = Astro.props;
+---
+
+<svg
+  class={className}
+  viewBox="0 0 24 24"
+  width="24"
+  height="24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.6"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+>
+  {name === 'chat' && <path d="M12 3.6a8.4 8.4 0 0 0-7.3 12.6l-1.1 4.2 4.3-1.1A8.4 8.4 0 1 0 12 3.6Z" />}
+  {name === 'download' && <path d="M12 4v11m0 0 4.5-4.5M12 15l-4.5-4.5M5 19.5h14" />}
+  {
+    name === 'mail' && (
+      <>
+        <rect x="3.5" y="5.5" width="17" height="13" rx="2" />
+        <path d="m4.5 7 7.5 6 7.5-6" />
+      </>
+    )
+  }
+  {name === 'arrow' && <path d="M5 12h14m-5-5 5 5-5 5" />}
+</svg>
