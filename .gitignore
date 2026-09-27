@@ -1,0 +1,21 @@
+# Dependencies and build output
+node_modules/
+dist/
+.astro/
+
+# Original source files. Optimised copies live in src/assets and public.
+AkcanutAssets/
+
+# Local tooling and editor state
+.claude/
+.vscode/
+.idea/
+.env
+.env.*
+!.env.example
+
+# OS files and logs
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
